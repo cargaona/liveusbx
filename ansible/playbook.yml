@@ -1,0 +1,32 @@
+- hosts: all
+  tasks:
+    - name: install i3 and x 
+      become: true
+      become_user: root
+      apt:
+        state: present
+        name:
+            - i3
+            - xinit
+
+    - name: terminal stuff
+      apt:
+        state: present
+        name:
+            - konsole
+            - autojump
+            - zsh
+            - tree 
+
+    - name: install liveusb dependencies
+      become: true
+      become_user: root
+      apt:
+        state: present
+        name:
+            - mkisofs   
+
+    - name: create user
+      user:
+          name: char
+        

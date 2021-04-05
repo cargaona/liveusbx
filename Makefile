@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 LINUX_LIVE_PATH = /tmp/linux-live
 
 build:
