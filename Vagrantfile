@@ -1,12 +1,9 @@
 VAGRANT_BOX = 'generic/ubuntu2004'
 VM_NAME = 'ubuntu-i3wm'
 VM_USER = 'char'
-MAC_USER = 'cargaona'
-HOST_PATH = '/Users/$MAC_USER/$VM_NAME'
+HOST_USER = 'char'
 # Where to sync to on Guest — 'vagrant' is the default user name
 GUEST_PATH = '/home/$VM_USER/$VM_NAME'
-# # VM Port — uncomment this to use NAT instead of DHCP
-# VM_PORT = 8080
 Vagrant.configure(2) do |config|
   # Vagrant box from Hashicorp
   config.vm.box = VAGRANT_BOX
@@ -18,13 +15,20 @@ Vagrant.configure(2) do |config|
     v.name = VM_NAME
     v.memory = 2048
   end
-  #DHCP — comment this out if planning on using NAT instead
-  config.vm.network "private_network", type: "dhcp"
+  
+  config.vm.synced_folder "tmp/", "/tmp", create: true, disabled: false
   config.vm.provision "shell", inline: <<-SHELL
+    useradd -d /home/char/ -m -G sudo char
     apt-get update
+    apt-get install -y mkisofs
     apt-get install -y xinit
+    apt-get install -y konsole
     apt-get install -y i3	
     apt-get install -y git
     apt-get install -y build-essential
   SHELL
-end
+  config.vm.provision "file", source: "~/.ssh/cg-etermax", destination: "~/.ssh/cg-etermax"
+  config.vm.provision "file", source: "./linux-live-config", destination: "~/config"
+  config.vm.provision "file", source: "~/.config/i3/config", destination: "~/.config/i3/config"
+ end 
+ 
